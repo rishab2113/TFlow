@@ -8,9 +8,10 @@ from sklearn.metrics import mean_squared_error
 data = pd.read_csv('cal_housing_clean.csv')
 
 to_normalize = ['housingMedianAge', 'totalRooms', 'totalBedrooms', 'population',
-       'households', 'medianIncome', 'medianHouseValue']
+                'households', 'medianIncome', 'medianHouseValue']
 
-data[to_normalize] = data[to_normalize].apply(lambda x: (x - x.min()) / (x.max() - x.min()))
+data[to_normalize] = data[to_normalize].apply(
+    lambda x: (x - x.min()) / (x.max() - x.min()))
 
 med_age = tf.feature_column.numeric_column('housingMedianAge')
 tot_rooms = tf.feature_column.numeric_column('totalRooms')
@@ -20,25 +21,30 @@ household = tf.feature_column.numeric_column('households')
 med_income = tf.feature_column.numeric_column('medianIncome')
 med_house_value = tf.feature_column.numeric_column('medianHouseValue')
 
-feat_cols = [med_age,tot_rooms,tot_bedrooms,popul,household,med_income]
+feat_cols = [med_age, tot_rooms, tot_bedrooms, popul, household, med_income]
 
 x_data = data.drop('medianHouseValue', axis=1)
 
 labels = data['medianHouseValue']
 
-X_train, X_test, Y_train, Y_test = train_test_split(x_data,labels,test_size=0.3)
+X_train, X_test, Y_train, Y_test = train_test_split(
+    x_data, labels, test_size=0.3)
 
-input_func = tf.estimator.inputs.pandas_input_fn(x=X_train, y=Y_train, batch_size=10, num_epochs=10, shuffle=True)
+input_func = tf.estimator.inputs.pandas_input_fn(
+    x=X_train, y=Y_train, batch_size=10, num_epochs=10, shuffle=True)
 
-model = tf.estimator.DNNRegressor(hidden_units=[6,6,6],feature_columns=feat_cols)
+model = tf.estimator.DNNRegressor(
+    hidden_units=[6, 6, 6], feature_columns=feat_cols)
 
 model.train(input_fn=input_func, steps=1000)
 
-test_input_func = tf.estimator.inputs.pandas_input_fn(x=X_test, y=Y_test, batch_size=10, num_epochs=1, shuffle=False)
+test_input_func = tf.estimator.inputs.pandas_input_fn(
+    x=X_test, y=Y_test, batch_size=10, num_epochs=1, shuffle=False)
 
 results = model.evaluate(test_input_func)
 
-pred_input_func = tf.estimator.inputs.pandas_input_fn(x=X_test, batch_size=10, num_epochs=1, shuffle=False)
+pred_input_func = tf.estimator.inputs.pandas_input_fn(
+    x=X_test, batch_size=10, num_epochs=1, shuffle=False)
 
 predictions = model.predict(pred_input_func)
 
