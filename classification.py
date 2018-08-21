@@ -4,6 +4,8 @@ import tensorflow as tf
 
 diabetes = pd.read_csv('pima-indians-diabetes.csv')
 
+print(diabetes.head())
+
 # Normalize Data
 
 cols_to_norm = ['Number_pregnant', 'Glucose_concentration',  'Blood_pressure',
@@ -31,3 +33,11 @@ assigned_group = tf.feature_column.categorical_column_with_hash_bucket('Group',h
 # Bucket continuous values into categories
 
 age_bucket = tf.feature_column.bucketized_column(age,boundaries = [20,30,40,50,60,70,80])
+
+# Combine to form master Feature Columns
+
+feat_cols = [num_preg,plasma_gluc,dias_press,tricep,insulin,bmi,diabetes_pedigree,assigned_group,age_bucket]
+
+# Train Test Split
+
+x_data = diabetes.drop('Class', axis=1)
