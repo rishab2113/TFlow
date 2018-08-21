@@ -61,13 +61,21 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 input_func = tf.estimator.inputs.pandas_input_fn(x=X_train, y=y_train, batch_size=10, num_epochs=1000, shuffle=True)
 
+# Defining Model
+
 model = tf.estimator.LinearClassifier(feature_columns=feat_cols, n_classes=2)
 
+# Training Model
+
 model.train(input_fn=input_func, steps=1000)
+
+# Testing Model
 
 eval_input_func = tf.estimator.inputs.pandas_input_fn(x=X_test, y=y_test, batch_size=10, num_epochs=1, shuffle=False)
 
 results = model.evaluate(eval_input_func)
+
+# Testing on New Data
 
 pred_input_func = tf.estimator.inputs.pandas_input_fn(x=X_test, batch_size=10, num_epochs=1, shuffle=False)
 
@@ -75,5 +83,37 @@ predictions = model.predict(pred_input_func)
 
 my_pred = list(predictions)
 
+# Convert Feature Columns to DenseColumn for Input to a DNN
+
+embedded_group_col = tf.feature_column.embedding_column(assigned_group, dimension=4)
+
+feat_cols = [num_preg, plasma_gluc, dias_press, tricep,
+             insulin, bmi, diabetes_pedigree, embedded_group_col, age_bucket]
+
+# Creating Input Function
+
+input_func = tf.estimator.inputs.pandas_input_fn(x=X_train, y=y_train, batch_size=10, num_epochs=1000, shuffle=True)
+
+# Defining Model
+
 dnn_model = tf.estimator.DNNClassifier(hidden_units=[10,10,10], feature_columns=feat_cols, n_classes=2)
+
+# Training Model
+
 dnn_model.train(input_fn=input_func, steps=1000)
+
+# Testing Model
+
+eval_input_func = tf.estimator.inputs.pandas_input_fn(x=X_test, y=y_test, batch_size=10, num_epochs=1, shuffle=False)
+
+results = model.evaluate(eval_input_func)
+
+# Testing on New Data
+
+pred_input_func = tf.estimator.inputs.pandas_input_fn(x=X_test, batch_size=10, num_epochs=1, shuffle=False)
+
+predictions = model.predict(pred_input_func)
+
+my_pred = list(predictions)
+
+print(my_pred)
