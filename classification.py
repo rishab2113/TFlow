@@ -27,3 +27,7 @@ assigned_group = tf.feature_column.categorical_column_with_vocabulary_list('Grou
 # Hash Bucket - Make categories automatically
 
 assigned_group = tf.feature_column.categorical_column_with_hash_bucket('Group',hash_bucket_size=10)
+
+# Bucket continuous values into categories
+
+age_bucket = tf.feature_column.bucketized_column(age,boundaries = [20,30,40,50,60,70,80])
