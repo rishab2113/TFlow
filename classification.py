@@ -20,6 +20,10 @@ bmi = tf.feature_column.numeric_column('BMI')
 diabetes_pedigree = tf.feature_column.numeric_column('Pedigree')
 age = tf.feature_column.numeric_column('Age')
 
-# Vocabulary List
+# Vocabulary List - Write categories manually
 
 assigned_group = tf.feature_column.categorical_column_with_vocabulary_list('Group',['A','B','C','D'])
+
+# Hash Bucket - Make categories automatically
+
+assigned_group = tf.feature_column.categorical_column_with_hash_bucket('Group',hash_bucket_size=10)
