@@ -14,11 +14,13 @@ cols_to_norm = ['age', 'education_num',
 data[cols_to_norm] = data[cols_to_norm].apply(
     lambda x: (x - x.min()) / (x.max() - x.min()))
 
+
 def label_fix(label):
     if label == ' <=50K':
         return 0
     else:
         return 1
+
 
 data['income_bracket'] = data['income_bracket'].apply(label_fix)
 
@@ -44,15 +46,18 @@ cap_gain = tf.feature_column.numeric_column(key='capital_gain')
 cap_loss = tf.feature_column.numeric_column(key='capital_loss')
 hpw = tf.feature_column.numeric_column(key='hours_per_week')
 
-feat_cols=[per_age,edu_num,edu,cap_gain,cap_loss,hpw,country,gend,w_class,marstat,occ,rel,per_race]
+feat_cols = [per_age, edu_num, edu, cap_gain, cap_loss, hpw,
+             country, gend, w_class, marstat, occ, rel, per_race]
 
 x_data = data.drop('income_bracket', axis=1)
 
 labels = data['income_bracket']
 
-X_train, X_test, Y_train, Y_test = train_test_split(x_data, labels, test_size=0.3)
+X_train, X_test, Y_train, Y_test = train_test_split(
+    x_data, labels, test_size=0.3)
 
-input_func = tf.estimator.inputs.pandas_input_fn(x=X_train, y=Y_train, batch_size=100, num_epochs=None, shuffle=True)
+input_func = tf.estimator.inputs.pandas_input_fn(
+    x=X_train, y=Y_train, batch_size=100, num_epochs=None, shuffle=True)
 
 model = tf.estimator.LinearClassifier(feature_columns=feat_cols)
 
@@ -67,4 +72,4 @@ predictions = list(pred_gen)
 
 final_preds = [pred['class_ids'][0] for pred in predictions]
 
-print(classification_report(Y_test,final_preds))
+print(classification_report(Y_test, final_preds))
