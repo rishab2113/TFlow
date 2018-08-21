@@ -115,5 +115,3 @@ pred_input_func = tf.estimator.inputs.pandas_input_fn(x=X_test, batch_size=10, n
 predictions = model.predict(pred_input_func)
 
 my_pred = list(predictions)
-
-print(my_pred)
