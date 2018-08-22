@@ -24,3 +24,16 @@
 # Data Expansion (Artificially expand data by adding noise, tilt, white noise)
 
 # MNIST Dataset
+# Image flattening removes the 2D info
+
+# Softmax Regression Approach
+# Returns a list of values between 0 and 1 that add up to 1
+
+# Softmax Activation Function
+
+import tensorflow as tf
+import logging
+logging.getLogger().setLevel(logging.INFO)
+from tensorflow.examples.tutorials.mnist import input_data
+
+mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
