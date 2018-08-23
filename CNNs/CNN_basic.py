@@ -11,4 +11,4 @@
 
 # Pooling Layers subsample the image, reducing memory use and computer load
 
-# Dropout can be thought of as a form of regularization ro prevent overfitting
+# Dropout can be thought of as a form of regularization to prevent overfitting
