@@ -20,8 +20,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-# Helper
-
+# Helper Functions
 
 # Init Weights
 
@@ -82,13 +81,13 @@ convo_1_pooling = max_pool_2by2(convo_1)
 convo_2 = convolution_layer(convo_1_pooling, shape=[5, 5, 32, 64])
 convo_2_pooling = max_pool_2by2(convo_2)
 convo_2_flat = tf.reshape(convo_2_pooling, [-1, 7 * 7 * 64])
-full_layer_one = tf.nn.relu(normal_full_layer(convo_2_flat, 1024))
+full_layer_one = tf.nn.relu(full_layer(convo_2_flat, 1024))
 
 # Dropout
 
 hold_prob = tf.placeholder(tf.float32)
 full_one_dropout = tf.nn.dropout(full_layer_one, keep_prob=hold_prob)
-y_pred = normal_full_layer(full_one_dropout, 10)
+y_pred = full_layer(full_one_dropout, 10)
 
 # Loss function
 
