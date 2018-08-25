@@ -144,10 +144,8 @@ convo_1 = convolution_layer(x, [4, 4, 3, 32])
 convo_1_pooling = max_pool_2by2(convo_1)
 convo_2 = convolution_layer(convo_1_pooling, [4, 4, 32, 64])
 convo_2_pooling = max_pool_2by2(convo_2)
-convo_3 = convolution_layer(convo_2_pooling, [4, 4, 64, 128])
-convo_3_pooling = max_pool_2by2(convo_3)
-flatten_layer = tf.reshape(convo_3_pooling, shape=[-1, 4 * 4 * 128])
-full_layer_one = tf.nn.relu(full_layer(flatten_layer, 512))
+flatten_layer = tf.reshape(convo_2_pooling, shape=[-1, 8 * 8 * 64])
+full_layer_one = tf.nn.relu(full_layer(flatten_layer, 1024))
 full_one_dropout = tf.nn.dropout(full_layer_one, keep_prob=hold_prob)
 y_pred = full_layer(full_one_dropout, 10)
 
@@ -164,9 +162,9 @@ steps = 5000
 with tf.Session() as sess:
     sess.run(init)
     for i in range(steps):
-        batch_x, batch_y = ch.next_batch(100)
-        sess.run(train, feed_dict={x: batch_x,
-                                   y_true: batch_y, hold_prob: 0.5})
+        batch = ch.next_batch(100)
+        sess.run(train, feed_dict={x: batch[0],
+                                   y_true: batch[1], hold_prob: 0.5})
         if i % 100 == 0:
             print("Accuracy: ")
             matches = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y_true, 1))
